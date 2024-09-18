@@ -44,8 +44,8 @@ class DefaultFirebaseOptions {
     appId: dotenv.env['FIREBASE_WEB_APP_ID']!,
     messagingSenderId: dotenv.env['FIREBASE_WEB_MESSAGING_SENDER_ID']!,
     projectId: dotenv.env['FIREBASE_WEB_PROJECT_ID']!,
-    authDomain: dotenv.env['FIREBASE_WEB_AUTH_DOMAIN']!,
-    storageBucket: dotenv.env['FIREBASE_WEB_STORAGE_BUCKET']!,
+    authDomain: dotenv.env['FIREBASE_WEB_AUTH_DOMAIN'],
+    storageBucket: dotenv.env['FIREBASE_WEB_STORAGE_BUCKET'],
     measurementId: dotenv.env['FIREBASE_WEB_MEASUREMENT_ID'],
   );
 
