@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1007391330029",
+    "project_id": "azure-push-notification-rnd",
+    "storage_bucket": "azure-push-notification-rnd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007391330029:android:d5ede2a9fb118d8342c6e4",
+        "android_client_info": {
+          "package_name": "com.example.verygoodcore.push_notification_azure_rnd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK2k3v8RwXCMxBlDWQVBriUY44CFWV-1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

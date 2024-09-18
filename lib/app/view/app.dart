@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:push_notification_azure_rnd/counter/counter.dart';
 import 'package:push_notification_azure_rnd/l10n/l10n.dart';
+import 'package:push_notification_azure_rnd/message/view/my_home_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const MyHomePage(),
     );
   }
 }
