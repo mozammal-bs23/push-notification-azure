@@ -16,9 +16,19 @@ Future<void> main() async {
     name: 'azure-push-notification-rnd',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   final messaging = FirebaseMessaging.instance;
 
   final settings = await messaging.requestPermission();
+
+  FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
+    if (kDebugMode) {
+      print(fcmToken);
+    }
+    Firebase.initializeApp();
+  }).onError((err) {
+    // Error getting token.
+  });
 
   if (kDebugMode) {
     print('Permission granted: ${settings.authorizationStatus}');

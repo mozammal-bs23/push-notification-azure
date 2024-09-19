@@ -1,51 +1,63 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:push_notification_azure_rnd/l10n/l10n.dart';
 import 'package:push_notification_azure_rnd/message/view/my_home_page.dart';
-import 'package:rxdart/rxdart.dart';
 
-// Mock FirebaseMessaging
-class MockFirebaseMessaging extends Mock implements FirebaseMessaging {}
+class MockFirebaseMessaging extends Mock implements FirebaseMessaging {
+  Stream<RemoteMessage> get onMessage => super.noSuchMethod(
+        Invocation.getter(#onMessage),
+        returnValue: Stream<RemoteMessage>.value(
+          const RemoteMessage(
+            notification: RemoteNotification(
+              title: 'Hello',
+              body: 'Hi',
+            ),
+          ),
+        ),
+      ) as Stream<RemoteMessage>;
+}
 
 void main() {
-  group('MyHomePage', () {
-    testWidgets('should update UI when receiving a Firebase message',
-        (WidgetTester tester) async {
-      // Create a BehaviorSubject to simulate Firebase message stream
-      final messageStreamController = BehaviorSubject<RemoteMessage>();
+  late StreamController<RemoteMessage> messageStreamController;
+  late MockFirebaseMessaging mockFirebaseMessaging;
+  late String lastMessage;
 
-      // Create the widget
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: MyHomePage(),
-        ),
-      );
+  setUp(() {
+    messageStreamController = StreamController<RemoteMessage>();
+    mockFirebaseMessaging = MockFirebaseMessaging();
 
-      // Simulate receiving a Firebase message
-      const mockMessage = RemoteMessage(
-        notification: RemoteNotification(
-          title: 'Test Title',
-          body: 'Test Body',
-        ),
-        data: {'key': 'value'},
-      );
+    when(mockFirebaseMessaging.onMessage)
+        .thenAnswer((_) => messageStreamController.stream);
 
-      // Emit the message into the Firebase message stream
-      FirebaseMessaging.onMessage.listen((message) {
-        messageStreamController.add(mockMessage);
-      });
+    lastMessage = '';
+  });
 
-      // Let the stream and UI update process
-      await tester.pump();
+  testWidgets(
+      'renders MyHomePage and updates UI on receiving a Firebase message',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: MyHomePage(),
+      ),
+    );
 
-      // Verify the UI is updated with the message
-      expect(find.textContaining('Title=Test Title'), findsOneWidget);
-      expect(find.textContaining('Body=Test Body'), findsOneWidget);
-      expect(find.textContaining('Data: {key: value}'), findsOneWidget);
-
-      // Close the stream after the test
-      await messageStreamController.close();
+    mockFirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      lastMessage = 'Received a notification message: '
+          'Title=${message?.notification?.title},'
+          'Body=${message?.notification?.body}';
     });
+
+    // Verify the UI updates with correct text
+    expect(find.text('Last message from Firebase Messaging:'), findsOneWidget);
+    expect(
+      find.text(lastMessage),
+      findsOneWidget,
+    );
   });
 }

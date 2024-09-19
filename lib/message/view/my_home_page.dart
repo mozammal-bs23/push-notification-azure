@@ -16,11 +16,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final l10 = context.l10n;
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _lastMessage = 'Received a notification message: '
-          'Title=${message.notification?.title},'
-          'Body=${message.notification?.body},'
-          'Data: ${message.data}';
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      setState(() {
+        _lastMessage = 'Received a notification message: '
+            'Title=${message?.notification?.title},'
+            'Body=${message?.notification?.body}';
+      });
     });
 
     return Scaffold(
@@ -30,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
               'Last message from Firebase Messaging:',
               style: Theme.of(context).textTheme.titleLarge,
